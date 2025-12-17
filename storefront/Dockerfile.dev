@@ -1,0 +1,24 @@
+# Dockerfile para Desenvolvimento com Hot Reload
+FROM node:22-alpine
+
+# Instalar pnpm
+RUN corepack enable && corepack prepare pnpm@9.10.0 --activate
+
+WORKDIR /app
+
+# Copiar arquivos de dependências
+COPY package.json pnpm-lock.yaml ./
+
+# Instalar dependências
+RUN pnpm install
+
+# Copiar arquivos de configuração (serão sobrescritos pelos volumes)
+COPY tsconfig.json next.config.js check-env-variables.js ./
+COPY tailwind.config.js postcss.config.js ./
+
+# Expor porta
+EXPOSE 8000
+
+# O código será montado via volume
+# Comando será sobrescrito pelo docker-compose
+CMD ["pnpm", "dev"]

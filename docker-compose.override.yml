@@ -1,0 +1,48 @@
+# Docker Compose Override para Desenvolvimento
+# Este arquivo é automaticamente mesclado com docker-compose.yml
+# quando você executa `docker compose up`
+#
+# Ele configura volumes para hot-reload e outras facilidades de dev
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    volumes:
+      # Mount do código fonte para hot-reload
+      - ./backend/src:/app/src:delegated
+      - ./backend/medusa-config.js:/app/medusa-config.js:delegated
+      - ./backend/tsconfig.json:/app/tsconfig.json:delegated
+      # Preserve node_modules dentro do container
+      - backend-node-modules:/app/node_modules
+      - backend-medusa:/app/.medusa
+    environment:
+      NODE_ENV: development
+
+  storefront:
+    build:
+      context: ./storefront
+      dockerfile: Dockerfile.dev
+    volumes:
+      # Mount do código fonte para hot-reload
+      - ./storefront/src:/app/src:delegated
+      - ./storefront/public:/app/public:delegated
+      - ./storefront/next.config.js:/app/next.config.js:delegated
+      - ./storefront/check-env-variables.js:/app/check-env-variables.js:delegated
+      - ./storefront/tsconfig.json:/app/tsconfig.json:delegated
+      - ./storefront/tailwind.config.js:/app/tailwind.config.js:delegated
+      - ./storefront/postcss.config.js:/app/postcss.config.js:delegated
+      # Preserve node_modules e .next dentro do container
+      - storefront-node-modules:/app/node_modules
+      - storefront-next:/app/.next
+    environment:
+      NODE_ENV: development
+      NEXT_PUBLIC_MEDUSA_BACKEND_URL: http://backend:9000
+    command: pnpm dev
+
+volumes:
+  backend-node-modules:
+  backend-medusa:
+  storefront-node-modules:
+  storefront-next:

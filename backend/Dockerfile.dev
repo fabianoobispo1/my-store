@@ -1,0 +1,24 @@
+# Dockerfile para Desenvolvimento com Hot Reload
+FROM node:22-alpine
+
+# Instalar pnpm
+RUN corepack enable && corepack prepare pnpm@9.10.0 --activate
+
+WORKDIR /app
+
+# Copiar arquivos de dependências
+COPY package.json pnpm-lock.yaml ./
+
+# Instalar dependências
+RUN pnpm install
+
+# Copiar entrypoint script
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+# Expor porta
+EXPOSE 9000
+
+# O código será montado via volume
+# Usar entrypoint script
+ENTRYPOINT ["docker-entrypoint.sh"]

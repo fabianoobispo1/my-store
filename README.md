@@ -52,6 +52,54 @@ Updated: to `version 2.12.1` 🥳
 - Stripe payment service: [Watch setup video](https://youtu.be/dcSOpIzc1Og)
 - Meilisearch integration by [Rokmohar](https://github.com/rokmohar/medusa-plugin-meilisearch): Adds powerful product search capabilities to your store. When deployed on Railway using the template, MeiliSearch is automatically configured. (For non-railway'ers: [Watch setup video](https://youtu.be/hrXcc5MjApI))
 
+## 🐳 Docker Setup (Recomendado)
+
+A maneira mais fácil de rodar o projeto completo com todos os serviços!
+
+### Início Rápido
+
+```bash
+# 1. Setup inicial (cria .env e inicia containers)
+make setup
+
+# OU manualmente:
+cp .env.example .env
+# Edite o .env e altere as senhas
+./setup-docker.sh
+```
+
+Após o setup, você precisa:
+1. Acessar http://localhost:9000/app
+2. Obter a Publishable Key em Settings → Publishable API Keys
+3. Adicionar no `.env` em `NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY`
+4. Reiniciar: `make restart`
+
+### Comandos Disponíveis
+
+```bash
+make dev              # Inicia ambiente de desenvolvimento
+make prod             # Inicia ambiente de produção
+make logs             # Ver logs de todos os containers
+make logs-backend     # Ver logs apenas do backend
+make restart          # Reiniciar containers
+make down             # Parar containers
+make build            # Rebuild das imagens
+make backup-db        # Backup do banco de dados
+make help             # Ver todos os comandos
+```
+
+### Acessar Serviços
+
+- **Storefront:** http://localhost:8000
+- **Admin Dashboard:** http://localhost:9000/app
+- **Backend API:** http://localhost:9000
+- **MinIO Console:** http://localhost:9011
+- **MeiliSearch:** http://localhost:7700
+
+📖 **[Documentação completa do Docker](DOCKER.md)**
+
+---
+
 # local setup
 
 ## Backend

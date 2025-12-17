@@ -1,0 +1,75 @@
+# Docker Compose para Produção
+# Use este arquivo para deploy em produção
+# Comando: docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+
+version: '3.8'
+
+services:
+  # Não expor portas desnecessárias
+  postgres:
+    ports: []
+    
+  redis:
+    ports: []
+    
+  minio:
+    ports: []
+    
+  meilisearch:
+    ports: []
+  
+  backend:
+    restart: always
+    environment:
+      NODE_ENV: production
+    # Configurar recursos (opcional)
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 1G
+  
+  storefront:
+    restart: always
+    environment:
+      NODE_ENV: production
+    # Configurar recursos (opcional)
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+  # Traefik Reverse Proxy (opcional - descomente para usar)
+  # traefik:
+  #   image: traefik:v2.10
+  #   container_name: medusa-traefik
+  #   restart: always
+  #   command:
+  #     - "--api.insecure=true"
+  #     - "--providers.docker=true"
+  #     - "--providers.docker.exposedbydefault=false"
+  #     - "--entrypoints.web.address=:80"
+  #     - "--entrypoints.websecure.address=:443"
+  #     - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+  #     - "--certificatesresolvers.myresolver.acme.email=seu@email.com"
+  #     - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #     - "8080:8080"
+  #   volumes:
+  #     - "/var/run/docker.sock:/var/run/docker.sock:ro"
+  #     - "traefik_letsencrypt:/letsencrypt"
+  #   networks:
+  #     - medusa-network
+
+# volumes:
+#   traefik_letsencrypt:
+#     driver: local
